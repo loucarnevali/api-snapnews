@@ -11,4 +11,9 @@ router.use('/auth', authRoute);
 router.use('/news', newsRoute);
 router.use('/doc', swaggerRoute);
 
+console.log(
+  'Routes mounted:',
+  router.stack.map((r) => r.route.path),
+);
+
 export default router;

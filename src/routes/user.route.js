@@ -8,6 +8,11 @@ const userRoute = Router();
 //Create user
 userRoute.post('/', userController.create);
 
+userRoute.post('/', (req, res) => {
+  console.log('POST /user');
+  userController.create(req, res);
+});
+
 //Find all users
 userRoute.get('/', userController.findAllUsers);
 

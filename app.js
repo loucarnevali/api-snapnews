@@ -11,4 +11,8 @@ app.use(cors());
 app.use(express.json());
 app.use(router);
 
+app.listen(() => {
+  console.log(`Server is running app`);
+});
+
 export default app;
