@@ -1,5 +1,4 @@
 import { Router } from 'express';
-const router = Router();
 
 import {
   create,
@@ -16,22 +15,24 @@ import {
 } from '../controllers/news.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 
-// Routes for creating, fetching, and manipulating news
-router.post('/', authMiddleware, create);
+const newsRoute = Router();
 
-router.get('/', findAllNews);
-router.get('/top', topNews);
-router.get('/search', searchByTitle);
-router.get('/byuser', authMiddleware, byUser);
+// Routes for creating, fetching, and manipulating news
+newsRoute.post('/', authMiddleware, create);
+
+newsRoute.get('/', findAllNews);
+newsRoute.get('/top', topNews);
+newsRoute.get('/search', searchByTitle);
+newsRoute.get('/byuser', authMiddleware, byUser);
 
 // Routes for manipulating individual news
-router.get('/:id', authMiddleware, findById);
-router.patch('/:id', authMiddleware, update);
-router.delete('/:id', authMiddleware, deleteNews);
+newsRoute.get('/:id', authMiddleware, findById);
+newsRoute.patch('/:id', authMiddleware, update);
+newsRoute.delete('/:id', authMiddleware, deleteNews);
 
 // Routes for manipulating likes and comments on news
-router.patch('/like/:id', authMiddleware, likeNews);
-router.patch('/comment/:id', authMiddleware, addComment);
-router.patch('/comment/:idNews/:idComment', authMiddleware, deleteComment);
+newsRoute.patch('/like/:id', authMiddleware, likeNews);
+newsRoute.patch('/comment/:id', authMiddleware, addComment);
+newsRoute.patch('/comment/:idNews/:idComment', authMiddleware, deleteComment);
 
-export default router;
+export default newsRoute;
