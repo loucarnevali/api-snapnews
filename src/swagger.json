@@ -12,7 +12,7 @@
 
   "servers": [
     {
-      "url": "https://api-snapnews.vercel.app/",
+      "url": "https://api-snapnews.onrender.com",
       "description": "Vercel Server"
     },
     {
