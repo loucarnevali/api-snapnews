@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-// Import bcrypt for password hashing
 import bcrypt from 'bcrypt';
 
 const UserSchema = new mongoose.Schema({
@@ -10,15 +9,18 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
   },
   password: {
     type: String,
     required: true,
+    select: true,
   },
   avatar: {
     type: String,
@@ -30,12 +32,11 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-// Middleware function to hash the password before saving it to the database
 UserSchema.pre('save', async function (next) {
-  // Hash the password using bcrypt with a salt of 10
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
+
 const User = mongoose.model('User', UserSchema);
 
 export default User;

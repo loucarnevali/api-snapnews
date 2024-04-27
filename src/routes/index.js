@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import userRoute from './user.route.js';
-import authRoute from './auth.route.js';
-import newsRoute from './news.route.js';
-import swaggerRoute from './swagger.route.cjs';
+import userRouter from './user.route.js';
+import postRouter from './post.route.js';
+import authRouter from './auth.route.js';
+import swaggerRouter from './swagger.route.cjs';
 
 const router = Router();
 
-router.use('/user', userRoute);
-router.use('/auth', authRoute);
-router.use('/news', newsRoute);
-router.use('/doc', swaggerRoute);
+router.use('/user', userRouter);
+router.use('/posts', postRouter);
+router.use('/auth', authRouter);
+router.use('/doc', swaggerRouter);
 
 export default router;
