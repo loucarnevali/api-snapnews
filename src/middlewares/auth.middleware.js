@@ -20,7 +20,7 @@ function authMiddleware(req, res, next) {
     return res.status(401).send({ message: 'Malformatted Token!' });
 
   // Verify the JWT token using the secret key from environment variables
-  jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+  jwt.verify(token, process.env.SECRET_JWT, async (err, decoded) => {
     if (err) return res.status(401).send({ message: 'Invalid token!' });
 
     // Find user by ID from the decoded token
