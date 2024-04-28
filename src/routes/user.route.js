@@ -6,7 +6,7 @@ import { validId, validUser } from '../middlewares/global.middlewares.js';
 const userRoute = Router();
 
 //Create user
-userRoute.post('/', userController.create);
+userRoute.post('/create', userController.create);
 
 //Find all users
 userRoute.get('/', userController.findAllUsers);
