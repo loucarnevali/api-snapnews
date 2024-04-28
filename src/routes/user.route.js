@@ -8,11 +8,19 @@ const userRouter = Router();
 
 userRouter.post('/create', userController.createUserController);
 
+// Apply authMiddleware to all routes below this line
 userRouter.use(authMiddleware);
+
+//To fetch all users
 userRouter.get('/', userController.findAllUserController);
 
+// Apply validId middleware (global) to all routes below this line
 userRouter.use(validId);
+
+//To find a user by ID
 userRouter.get('/findById/:id?', userController.findUserByIdController);
+
+//To update user details
 userRouter.patch('/update/:id', userController.updateUserController);
 
 export default userRouter;

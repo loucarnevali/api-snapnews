@@ -1,5 +1,6 @@
 import userService from '../services/user.service.js';
 
+//To create a new user
 async function createUserController(req, res) {
   const { name, username, email, password, avatar, background } = req.body;
 
@@ -18,6 +19,7 @@ async function createUserController(req, res) {
   }
 }
 
+//To retrieve all users
 async function findAllUserController(req, res) {
   try {
     const users = await userService.findAllUserService();
@@ -27,6 +29,7 @@ async function findAllUserController(req, res) {
   }
 }
 
+//To find a user by ID
 async function findUserByIdController(req, res) {
   try {
     const user = await userService.findUserByIdService(
@@ -39,6 +42,7 @@ async function findUserByIdController(req, res) {
   }
 }
 
+//To update a user
 async function updateUserController(req, res) {
   try {
     const { name, username, email, password, avatar, background } = req.body;

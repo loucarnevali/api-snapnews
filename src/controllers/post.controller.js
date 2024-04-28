@@ -2,9 +2,11 @@ import postService from '../services/post.service.js';
 
 async function createPostController(req, res) {
   const { title, banner, text } = req.body;
+  // Extract the authenticated user ID from the request
   const userId = req.userId;
 
   try {
+    // Call the createPostService function from postService to create a new post
     const post = await postService.createPostService(
       { title, banner, text },
       userId,
@@ -15,11 +17,14 @@ async function createPostController(req, res) {
   }
 }
 
+// To find all posts with pagination
 async function findAllPostsController(req, res) {
+  // Extract the limit and offset parameters from the request query
   const { limit, offset } = req.query;
   const currentUrl = req.baseUrl;
 
   try {
+    // To retrieve all posts
     const posts = await postService.findAllPostsService(
       limit,
       offset,
@@ -31,6 +36,7 @@ async function findAllPostsController(req, res) {
   }
 }
 
+//To retrieve top news/posts
 async function topNewsController(req, res) {
   try {
     const post = await postService.topNewsService();
@@ -40,10 +46,13 @@ async function topNewsController(req, res) {
   }
 }
 
+//To search posts by title
 async function searchPostController(req, res) {
+  // Extract the title query parameter from the request
   const { title } = req.query;
 
   try {
+    // Call the searchPostService function from postService to search posts by title
     const foundPosts = await postService.searchPostService(title);
 
     return res.send(foundPosts);
@@ -52,6 +61,7 @@ async function searchPostController(req, res) {
   }
 }
 
+//To find a post by ID
 async function findPostByIdController(req, res) {
   const { id } = req.params;
 
@@ -63,6 +73,7 @@ async function findPostByIdController(req, res) {
   }
 }
 
+// To find posts by user ID
 async function findPostsByUserIdController(req, res) {
   const id = req.userId;
   try {
@@ -73,9 +84,12 @@ async function findPostsByUserIdController(req, res) {
   }
 }
 
+// To update a post
 async function updatePostController(req, res) {
   const { title, banner, text } = req.body;
+  // Extract the post ID from the request parameters
   const { id } = req.params;
+  // Extract the authenticated user ID from the request
   const userId = req.userId;
 
   try {
@@ -87,6 +101,7 @@ async function updatePostController(req, res) {
   }
 }
 
+// To delete a post
 async function deletePostController(req, res) {
   const { id } = req.params;
   const userId = req.userId;
@@ -99,6 +114,7 @@ async function deletePostController(req, res) {
   }
 }
 
+// To like a post
 async function likePostController(req, res) {
   const { id } = req.params;
   const userId = req.userId;
@@ -112,6 +128,7 @@ async function likePostController(req, res) {
   }
 }
 
+//To add a comment to a post
 async function commentPostController(req, res) {
   const { id: postId } = req.params;
   const { message } = req.body;
@@ -128,6 +145,7 @@ async function commentPostController(req, res) {
   }
 }
 
+//To delete a comment from a post
 async function commentDeletePostController(req, res) {
   const { id: postId, idComment } = req.params;
   const userId = req.userId;
