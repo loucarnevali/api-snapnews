@@ -4,8 +4,7 @@ import { validId } from '../middlewares/global.middleware.js';
 
 import { Router } from 'express';
 
-const userRouter = Router();
-
+//Create user
 userRouter.post('/create', userController.createUserController);
 
 // Apply authMiddleware to all routes below this line
