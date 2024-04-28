@@ -1,83 +1,69 @@
 import userService from '../services/user.service.js';
 
-const create = async (req, res) => {
+//To create a new user
+async function createUserController(req, res) {
+  const { name, username, email, password, avatar, background } = req.body;
+
   try {
-    const { name, username, email, password, avatar, background } = req.body;
-
-    //Check if all required fields are provided
-    if (!name || !username || !email || !password || !avatar || !background) {
-      res.status(400).send({ message: 'Submit all fields for registration' });
-    }
-
-    //Create User
-    const user = await userService.createService(req.body);
-
-    //User Verification
-    if (!user) {
-      return res.status(400).send({ message: 'Error Creating User' });
-    }
-
-    res.status(201).send({
-      message: 'User Created Successfully',
-      user: { id: user._id, name, username, email, avatar, background },
-    });
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-const findAllUsers = async (req, res) => {
-  try {
-    const users = await userService.findAllService();
-
-    //Verification - if there are users
-    if (users.length === 0) {
-      return res.status(400).send({ message: 'No Registered Users' });
-    }
-
-    // Send response with found users
-    res.send(users);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-const findById = async (req, res) => {
-  try {
-    // The user comes from the middleware
-    const user = req.user;
-    res.send(user);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-const update = async (req, res) => {
-  try {
-    const { name, username, email, password, avatar, background } = req.body;
-
-    //Check if at least one field is provided for update
-    if (!name && !username && !email && !password && !avatar && !background) {
-      res.status(400).send({ message: 'Submit at least one field for update' });
-    }
-
-    // The user and id come from the middleware
-    const { id, user } = req;
-
-    await userService.updateService(
-      id,
+    const token = await userService.createUserService({
       name,
       username,
       email,
       password,
       avatar,
       background,
+    });
+    res.status(201).send(token);
+  } catch (e) {
+    return res.status(400).send(e.message);
+  }
+}
+
+//To retrieve all users
+async function findAllUserController(req, res) {
+  try {
+    const users = await userService.findAllUserService();
+    return res.send(users);
+  } catch (e) {
+    return res.status(404).send(e.message);
+  }
+}
+
+//To find a user by ID
+async function findUserByIdController(req, res) {
+  try {
+    const user = await userService.findUserByIdService(
+      req.params.id,
+      req.userId,
+    );
+    return res.send(user);
+  } catch (e) {
+    return res.status(400).send(e.message);
+  }
+}
+
+//To update a user
+async function updateUserController(req, res) {
+  try {
+    const { name, username, email, password, avatar, background } = req.body;
+    const { id: userId } = req.params;
+    const userIdLogged = req.userId;
+
+    const response = await userService.updateUserService(
+      { name, username, email, password, avatar, background },
+      userId,
+      userIdLogged,
     );
 
-    res.send({ message: 'User Successfully Updated!' });
-  } catch (err) {
-    res.status(500).send({ message: err.message });
+    return res.send(response);
+  } catch (e) {
+    res.status(400).send(e.message);
   }
-};
+}
 
-export default { create, findAllUsers, findById, update };
+export default {
+  createUserController,
+  findAllUserController,
+  findUserByIdController,
+  updateUserController,
+};

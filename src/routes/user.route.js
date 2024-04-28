@@ -1,20 +1,25 @@
-import { Router } from 'express';
 import userController from '../controllers/user.controller.js';
-// MIDDLEWARE
-import { validId, validUser } from '../middlewares/global.middlewares.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
+import { validId } from '../middlewares/global.middleware.js';
 
-const userRoute = Router();
+import { Router } from 'express';
 
 //Create user
-userRoute.post('/create', userController.create);
+userRouter.post('/create', userController.createUserController);
 
-//Find all users
-userRoute.get('/', userController.findAllUsers);
+// Apply authMiddleware to all routes below this line
+userRouter.use(authMiddleware);
 
-//Finding by id
-userRoute.get('/:id', validId, validUser, userController.findById);
+//To fetch all users
+userRouter.get('/', userController.findAllUserController);
 
-//Update one data
-userRoute.patch('/:id', validId, validUser, userController.update);
+// Apply validId middleware (global) to all routes below this line
+userRouter.use(validId);
 
-export default userRoute;
+//To find a user by ID
+userRouter.get('/findById/:id?', userController.findUserByIdController);
+
+//To update user details
+userRouter.patch('/update/:id', userController.updateUserController);
+
+export default userRouter;

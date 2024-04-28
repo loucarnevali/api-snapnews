@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import connectDataBase from './src/database/db.js';
+import connectDataBase from './src/database/database.js';
 import cors from 'cors';
 import router from './src/routes/index.js';
 

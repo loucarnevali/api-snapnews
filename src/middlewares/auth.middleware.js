@@ -1,52 +1,38 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import jwt from 'jsonwebtoken';
-import userService from '../services/user.service.js';
+import userRepositories from '../repositories/user.repositories.js';
 
-dotenv.config();
+function authMiddleware(req, res, next) {
+  // Retrieve the Authorization header from the request
+  const authHeader = req.headers.authorization;
+  if (!authHeader)
+    return res.status(401).send({ message: 'The token was not informed!' });
 
-export const authMiddleware = (req, res, next) => {
-  try {
-    // Get the Authorization header from the request
-    const { authorization } = req.headers;
+  // Split the header into parts
+  const parts = authHeader.split(' ');
+  if (parts.length !== 2)
+    return res.status(401).send({ message: 'Invalid token!' });
 
-    if (!authorization) {
-      return res.sendStatus(401);
-    }
+  // Destructure the parts into scheme and token
+  const [scheme, token] = parts;
 
-    // Split the Authorization header into parts
-    const parts = authorization.split(' ');
+  if (!/^Bearer$/i.test(scheme))
+    return res.status(401).send({ message: 'Malformatted Token!' });
 
-    if (parts.length !== 2) {
-      return res.sendStatus(401);
-    }
+  // Verify the JWT token using the secret key from environment variables
+  jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+    if (err) return res.status(401).send({ message: 'Invalid token!' });
 
-    // Destructure the parts into schema and token
-    const [schema, token] = parts;
+    // Find user by ID from the decoded token
+    const user = await userRepositories.findByIdUserRepository(decoded.id);
+    if (!user || !user.id)
+      return res.status(401).send({ message: 'Invalid token!' });
 
-    if (schema !== 'Bearer') {
-      return res.sendStatus(401);
-    }
+    // Set the user ID in the request object
+    req.userId = user.id;
 
-    // Verify the JWT token using the secret key from environment variables
-    jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
-      if (error) {
-        return res.status(401).send({ message: 'Token Invalid!' });
-      }
+    return next();
+  });
+}
 
-      // Find the user by ID from the decoded token using the user service
-      const user = await userService.findByIdService(decoded.id);
-
-      // Check if the user exists and has an ID
-      if (!user || !user.id) {
-        return res.status(401).send({ message: 'Invalid Token!' });
-      }
-
-      // Attach the user ID to the request object
-      req.userId = user.id;
-
-      return next();
-    });
-  } catch (err) {
-    res.status(500).send(err.nessage);
-  }
-};
+export default authMiddleware;
