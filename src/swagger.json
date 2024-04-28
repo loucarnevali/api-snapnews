@@ -22,7 +22,7 @@
   ],
 
   "paths": {
-    "/user/": {
+    "/user/create": {
       "post": {
         "summary": "Create a new user",
         "description": "Route responsible for creating a new user",
