@@ -2,6 +2,10 @@ import userController from '../controllers/user.controller.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
 import { validId } from '../middlewares/global.middleware.js';
 
+import { Router } from 'express';
+
+const userRouter = Router();
+
 //Create user
 userRouter.post('/create', userController.createUserController);
 
