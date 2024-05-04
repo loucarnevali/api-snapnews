@@ -24,7 +24,7 @@ async function findAllPostsService(limit, offset, currentUrl) {
   offset = Number(offset);
 
   if (!limit) {
-    limit = 5;
+    limit = 10;
   }
 
   if (!offset) {
