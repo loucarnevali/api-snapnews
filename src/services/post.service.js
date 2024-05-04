@@ -174,10 +174,14 @@ async function deletePostService(id, userId) {
 
 //To like or unlike a post
 async function likePostService(id, userId) {
-  const postLiked = await postService.likesService(id, userId);
+  const postLiked = await postRepositories.likesRepository(id, userId);
 
-  if (postLiked.lastErrorObject.n === 0) {
-    await postService.likesDeleteService(id, userId);
+  if (
+    postLiked &&
+    postLiked.lastErrorObject &&
+    postLiked.lastErrorObject.n === 0
+  ) {
+    await postRepositories.likesDeleteRepository(id, userId);
     return { message: 'Like successfully removed' };
   }
 
