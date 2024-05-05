@@ -120,10 +120,14 @@ async function likePostController(req, res) {
   const userId = req.userId;
 
   try {
+    // console.log(`Request to remove like for post ${id} by user ${userId}`);
     const response = await postService.likePostService(id, userId);
+
+    // console.log('Like removal response:', response);
 
     return res.send(response);
   } catch (e) {
+    // console.error('Error in likePostController:', e);
     return res.status(500).send(e.message);
   }
 }

@@ -173,19 +173,46 @@ async function deletePostService(id, userId) {
 }
 
 //To like or unlike a post
+// async function likePostService(id, userId) {
+//   try {
+//     const postLiked = await postRepositories.likesRepository(id, userId);
+
+//     if (
+//       postLiked &&
+//       postLiked.lastErrorObject &&
+//       postLiked.lastErrorObject.n === 0
+//     ) {
+//       await postRepositories.likesDeleteRepository(id, userId);
+//       return { message: 'Like successfully removed' };
+//     }
+
+//     return { message: 'Like done successfully' };
+//   } catch (error) {
+//     console.error('Error liking post:', error);
+//     throw error;
+//   }
+// }
 async function likePostService(id, userId) {
-  const postLiked = await postRepositories.likesRepository(id, userId);
+  try {
+    const post = await postRepositories.findPostByIdRepository(id);
 
-  if (
-    postLiked &&
-    postLiked.lastErrorObject &&
-    postLiked.lastErrorObject.n === 0
-  ) {
-    await postRepositories.likesDeleteRepository(id, userId);
-    return { message: 'Like successfully removed' };
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    const userLiked = post.likes.some((like) => like.userId === userId);
+
+    if (userLiked) {
+      await postRepositories.likesDeleteRepository(id, userId);
+      return { message: 'Like successfully removed' };
+    } else {
+      await postRepositories.likesRepository(id, userId);
+      return { message: 'Like done successfully' };
+    }
+  } catch (error) {
+    // console.error('Error liking post:', error);
+    throw error;
   }
-
-  return { message: 'Like done successfully' };
 }
 
 //To add a comment to a post

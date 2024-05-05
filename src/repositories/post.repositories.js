@@ -70,37 +70,46 @@ function deletePostRepository(id) {
 }
 
 //To add a like to a post
-function likesRepository(id, userId) {
-  return Post.findOneAndUpdate(
-    {
-      _id: id,
-      'likes.userId': { $nin: [userId] },
-    },
-    {
-      $push: {
-        likes: { userId, created: new Date() },
+async function likesRepository(id, userId) {
+  try {
+    return await Post.findOneAndUpdate(
+      {
+        _id: id,
+        'likes.userId': { $nin: [userId] },
       },
-    },
-    {
-      rawResult: true,
-    },
-  );
+      {
+        $push: {
+          likes: { userId, created: new Date() },
+        },
+      },
+      {
+        new: true,
+      },
+    );
+  } catch (error) {
+    console.error('Error adding like:', error);
+    throw error;
+  }
 }
 
 //To remove a like from a post
-function likesDeleteRepository(id, userId) {
-  return Post.findOneAndUpdate(
-    {
-      _id: id,
-    },
-    {
-      $pull: {
-        likes: {
-          userId: userId,
+async function likesDeleteRepository(id, userId) {
+  // console.log(`Removing like for post ${id} and user ${userId}`);
+  try {
+    const result = await Post.findOneAndUpdate(
+      { _id: id },
+      {
+        $pull: {
+          likes: { userId: userId },
         },
       },
-    },
-  );
+    );
+    // console.log('Like removal result:', result);
+    return result;
+  } catch (error) {
+    // console.error('Error removing like:', error);
+    throw error;
+  }
 }
 
 //To add a comment to a post
